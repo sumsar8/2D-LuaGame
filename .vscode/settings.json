@@ -1,0 +1,12 @@
+{
+    "Lua.diagnostics.globals": [
+        "love",
+        "player",
+        "bulletSpeed",
+        "bullet",
+        "bullets",
+        "dirbox",
+        "makeNewBullet",
+        "showdir"
+    ]
+}
