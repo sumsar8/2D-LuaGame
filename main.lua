@@ -37,7 +37,15 @@ function love.draw()
     love.graphics.rectangle("fill",player.x,player.y,player.width,player.height)
     love.graphics.setColor(0,1,0)
     love.graphics.rectangle("fill",dirbox.x,dirbox.y,dirbox.width,dirbox.height)
-    love.graphics.print(timer,100,100)
+    if timer == 0 then
+        love.graphics.rectangle("fill",100,100,100,20)
+
+    end
+    love.graphics.rectangle("line",100,100,100,20)
+    love.graphics.rectangle("fill",100,100,timer*100,20)
+    love.graphics.setColor(1,1,1)
+
+    love.graphics.print(math.floor(timer * 10) / 10,100,100)
 	love.graphics.setColor(0.5, 0.5, 0.5)
 	for i,v in ipairs(bullets) do
 		love.graphics.circle("fill", v.x, v.y, 10)
@@ -57,7 +65,7 @@ function love.update(dt)
     if starttimer == true then
         timer = timer + dt
     end
-        if timer >= 0.5 then
+        if timer >= 1 then
             starttimer = false
             timer = 0  
         end
