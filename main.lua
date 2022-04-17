@@ -2,9 +2,7 @@ function love.load()
     love.graphics.setDefaultFilter("nearest","nearest")
     love.window.setFullscreen(true)
     timer = 0
-
-
-
+    starttimer = false
     player = {}
     player.x = 0
     player.y = 0
@@ -25,6 +23,7 @@ function love.load()
 
    for i=0,7 do
       enemy = {}
+      enemy.health = 3
       enemy.width = 80
       enemy.height = 70
       enemy.speed = 20
@@ -38,24 +37,30 @@ function love.draw()
     love.graphics.rectangle("fill",player.x,player.y,player.width,player.height)
     love.graphics.setColor(0,1,0)
     love.graphics.rectangle("fill",dirbox.x,dirbox.y,dirbox.width,dirbox.height)
-
+    love.graphics.print(timer,100,100)
 	love.graphics.setColor(0.5, 0.5, 0.5)
 	for i,v in ipairs(bullets) do
-		love.graphics.circle("fill", v.x, v.y, 3)
+		love.graphics.circle("fill", v.x, v.y, 10)
 	end
     for i,e in ipairs(enemies) do
-        love.graphics.setColor(1,0,0)
+        if e.health <= 0 then
+            love.graphics.setColor(0,0,1)
+        else
+            love.graphics.setColor(1,0,0)
+        end
 
         love.graphics.rectangle("fill",e.x,e.y,e.width,e.height)
     end
 end
 
 function love.update(dt)
-    timer = timer + dt
-        if timer >= 1 then
-
+    if starttimer == true then
+        timer = timer + dt
+    end
+        if timer >= 0.5 then
+            starttimer = false
             timer = 0  
-        end  
+        end
     local dir = { x = 0, y = 0 }
 
 	bulletSpeed = 250
@@ -128,11 +133,13 @@ function love.update(dt)
         dirbox.x = player.x
         dirbox.y = player.y
     end
-    
     bullethitcheck(bullets,enemies)
 end
 function makeNewBullet(xvec,yvec)
-    table.insert(bullets, {x = player.x + player.width / 2, y = player.y + player.height / 2, dx = xvec * bullets.speed, dy = yvec * bullets.speed})
+    if timer == 0 then
+        table.insert(bullets, {x = player.x + player.width / 2, y = player.y + player.height / 2, dx = xvec * bullets.speed, dy = yvec * bullets.speed})
+        starttimer = true
+    end
 end
 function makeNewEnemy(xvec,yvec)
     table.insert(enemies, {x = math.random(0,1000), y = math.random(0,1000), dx = xvec * bullets.speed, dy = yvec * bullets.speed})
@@ -140,8 +147,9 @@ end
 function bullethitcheck(bullets,enemies)
     for i, v in ipairs(bullets) do
         for z, e in ipairs(enemies) do
-            if CheckCollision(v.x,v.y,6,6,e.x,e.y,e.width,e.height) then
+            if CheckCollision(v.x,v.y,10,10,e.x,e.y,e.width,e.height) then
                 table.remove(bullets, i)
+                e.health = e.health - 1
             end
         end
     end
