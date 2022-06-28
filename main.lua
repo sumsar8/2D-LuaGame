@@ -1,7 +1,9 @@
 function love.load()
+    tester = require("test")
     love.graphics.setDefaultFilter("nearest","nearest")
     love.window.setFullscreen(true)
     timer = 0
+    onesectimer = 0
     starttimer = false
     player = {}
     player.x = 0
@@ -62,6 +64,12 @@ function love.draw()
 end
 
 function love.update(dt)
+    test(10)
+    onesectimer = onesectimer + dt
+
+    if onesectimer >= 1 then
+        timer = 0  
+    end
     if starttimer == true then
         timer = timer + dt
     end
